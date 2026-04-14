@@ -1,0 +1,13 @@
+<h2>Solicitações</h2>
+
+<ul>
+  {{#each records}}
+    <li>
+      <a href="/records/request/{{this.id}}">
+        {{this.id}} - {{this.nome}} - {{this.assunto}}
+      </a>
+    </li>
+  {{/each}}
+</ul>
+
+<p><a href="/">Voltar</a></p>

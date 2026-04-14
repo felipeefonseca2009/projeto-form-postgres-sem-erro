@@ -1,0 +1,11 @@
+<h2>Operação realizada com sucesso</h2>
+
+<p>{{mensagem}}</p>
+<p>Tipo de registro: {{tipo}}</p>
+<p>ID gerado no banco: {{id}}</p>
+
+{{#if tipo}}
+  <p><a href="/records/{{tipo}}/{{id}}">Ver este registro</a></p>
+{{/if}}
+
+<p><a href="/">Voltar para a página inicial</a></p>

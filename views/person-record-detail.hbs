@@ -1,0 +1,13 @@
+<h2>Detalhe do Cadastro de Pessoa</h2>
+
+{{#if record}}
+  <p><strong>ID:</strong> {{record.id}}</p>
+  <p><strong>Nome:</strong> {{record.nome}}</p>
+  <p><strong>Email:</strong> {{record.email}}</p>
+  <p><strong>Telefone:</strong> {{record.telefone}}</p>
+  <p><strong>Cidade:</strong> {{record.cidade}}</p>
+{{else}}
+  <p>Registro não encontrado.</p>
+{{/if}}
+
+<p><a href="/records/person">Voltar</a></p>

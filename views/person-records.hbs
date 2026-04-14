@@ -1,0 +1,13 @@
+<h2>Cadastros de Pessoa</h2>
+
+<ul>
+  {{#each records}}
+    <li>
+      <a href="/records/person/{{this.id}}">
+        {{this.id}} - {{this.nome}} - {{this.email}}
+      </a>
+    </li>
+  {{/each}}
+</ul>
+
+<p><a href="/">Voltar</a></p>
