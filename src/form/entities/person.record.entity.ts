@@ -20,6 +20,6 @@ export class PersonRecord {
   @Column({ nullable: true })
   pais: string;
 
-  @Column({ nullable: true })
+  @Column({nullable: true })
   tataravo: string;
 }
