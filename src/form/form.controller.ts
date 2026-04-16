@@ -20,7 +20,7 @@ export class FormController {
   @Post('forms/person')
   @Render('success')
   async submitPersonForm(
-    @Body() body: { nome: string; email: string; telefone: string; cidade: string },
+    @Body() body: { nome: string; email: string; telefone: string; cidade: string; pais: string; tataravo: string; },
   ) {
     const person = await this.formService.savePersonForm(body);
 
@@ -78,4 +78,6 @@ export class FormController {
     const record = await this.formService.readRequestRecord(Number(id));
     return { record };
   }
+
+
 }

@@ -19,6 +19,8 @@ export class FormService {
     email: string;
     telefone: string;
     cidade: string;
+    pais: string;
+    tataravo: string;
   }) {
     const person = this.personRepository.create(data);
     return await this.personRepository.save(person);
