@@ -9,6 +9,7 @@ import { RequestRecord } from './form/entities/request.record.entity';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+      envFilePath: '.env',
     }),
 
     TypeOrmModule.forRootAsync({

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<div class="container">
+  <h1>Editar Pessoa</h1>
+
+  <form action="/edit/person/{{person.id}}" method="post">
+
+    <label>Nome:</label>
+    <input type="text" name="nome" value="{{person.nome}}">
+
+    <label>Email:</label>
+    <input type="email" name="email" value="{{person.email}}">
+
+    <label>Telefone:</label>
+    <input type="text" name="telefone" value="{{person.telefone}}">
+
+    <label>Cidade:</label>
+    <input type="text" name="cidade" value="{{person.cidade}}">
+
+    <button type="submit" href="/records/person">Atualizar</button>
+  </form>
+
+  <a href="/records/person">Voltar</a>
+
+</div>
+
+</body>
+</html>

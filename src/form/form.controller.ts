@@ -1,9 +1,27 @@
 import { Body, Controller, Get, Param, Post, Render } from '@nestjs/common';
 import { FormService } from './form.service';
 
+
+
 @Controller()
 export class FormController {
   constructor(private readonly formService: FormService) {}
+
+@Get('edit/person/:id')
+@Render('edit-person')
+async editPerson(@Param('id') id: number) {
+  const person = await this.formService.readPersonRecord(id);
+  return { person };
+}
+
+@Post('edit/person/:id')
+async updatePerson(
+  @Param('id') id: number,
+  @Body() body: any,
+) {
+  await this.formService.updatePerson(id, body);
+  return { mensagem: 'Atualizado com sucesso' };
+}
 
   @Get()
   @Render('home')
@@ -20,7 +38,7 @@ export class FormController {
   @Post('forms/person')
   @Render('success')
   async submitPersonForm(
-    @Body() body: { nome: string; email: string; telefone: string; cidade: string; pais: string; tataravo: string; },
+    @Body() body: { nome: string; email: string; telefone: string; cidade: string; pais: string; tataravo: string },
   ) {
     const person = await this.formService.savePersonForm(body);
 
@@ -77,7 +95,7 @@ export class FormController {
   async requestRecordDetail(@Param('id') id: string) {
     const record = await this.formService.readRequestRecord(Number(id));
     return { record };
-  }
 
-
+    
 }
+  }
