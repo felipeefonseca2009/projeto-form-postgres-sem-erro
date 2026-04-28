@@ -1,27 +1,31 @@
-import { Body, Controller, Get, Param, Post, Render } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Render, Redirect } from '@nestjs/common';
 import { FormService } from './form.service';
-
-
 
 @Controller()
 export class FormController {
   constructor(private readonly formService: FormService) {}
 
-@Get('edit/person/:id')
-@Render('edit-person')
-async editPerson(@Param('id') id: number) {
-  const person = await this.formService.readPersonRecord(id);
-  return { person };
-}
+  @Get('edit/person/:id')
+  @Render('edit-person')
+  async editPerson(@Param('id') id: number) {
+    const person = await this.formService.readPersonRecord(id);
+    return { person };
+  }
 
-@Post('edit/person/:id')
-async updatePerson(
-  @Param('id') id: number,
-  @Body() body: any,
-) {
-  await this.formService.updatePerson(id, body);
-  return { mensagem: 'Atualizado com sucesso' };
-}
+  @Post('edit/person/:id')
+  @Redirect('/records/person')
+  async updatePerson(
+    @Param('id') id: number,
+    @Body() body: any,
+  ) {
+    await this.formService.updatePerson(id, body);
+  }
+
+  @Post('delete/person/:id')
+  @Redirect('/records/person')
+  async deletePerson(@Param('id') id: string) {
+    await this.formService.deletePerson(Number(id));
+  }
 
   @Get()
   @Render('home')
@@ -38,7 +42,14 @@ async updatePerson(
   @Post('forms/person')
   @Render('success')
   async submitPersonForm(
-    @Body() body: { nome: string; email: string; telefone: string; cidade: string; pais: string; tataravo: string },
+    @Body() body: {
+      nome: string;
+      email: string;
+      telefone: string;
+      cidade: string;
+      pais: string;
+      tataravo: string;
+    },
   ) {
     const person = await this.formService.savePersonForm(body);
 
@@ -58,7 +69,12 @@ async updatePerson(
   @Post('forms/request')
   @Render('success')
   async submitRequestForm(
-    @Body() body: { nome: string; assunto: string; descricao: string; data: string },
+    @Body() body: {
+      nome: string;
+      assunto: string;
+      descricao: string;
+      data: string;
+    },
   ) {
     const request = await this.formService.saveRequestForm(body);
 
@@ -95,7 +111,5 @@ async updatePerson(
   async requestRecordDetail(@Param('id') id: string) {
     const record = await this.formService.readRequestRecord(Number(id));
     return { record };
-
-    
-}
   }
+}

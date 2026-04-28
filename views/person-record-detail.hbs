@@ -1,7 +1,5 @@
-<link rel="stylesheet" href="/css/style.css">
-
 <h2>Detalhe do Cadastro de Pessoa</h2>
-
+<link rel="stylesheet" href="/css/style.css">
 {{#if record}}
   <p><strong>ID:</strong> {{record.id}}</p>
   <p><strong>Nome:</strong> {{record.nome}}</p>
@@ -9,10 +7,13 @@
   <p><strong>Telefone:</strong> {{record.telefone}}</p>
   <p><strong>Cidade:</strong> {{record.cidade}}</p>
   <p><strong>País:</strong> {{record.pais}}</p>
-  <p><strong>CPF da Tataravó:</strong> {{record.tataravo}}</p>
+  <p><strong>Cpf da tataravo:</strong> {{record.tataravo}}</p>
 {{else}}
   <p>Registro não encontrado.</p>
 {{/if}}
 
 <p><a href="/records/person">Voltar</a></p>
- <p><a href="/edit/person/{{record.id}}">Editar Pessoa</a></p>
+<p><a href="/edit/person/{{record.id}}">Editar Pessoa</a></p>
+<form action="/delete/person/{{record.id}}" method="post" style="margin-top:10px;">
+  <button type="submit" class="btn-danger">Excluir</button>
+</form>
