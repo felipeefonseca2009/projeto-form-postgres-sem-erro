@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="/css/style.css">
+
+<h1>Login</h1>
+
+{{#if error}}
+  <div class="error">{{error}}</div>
+{{/if}}
+
+{{#if success}}
+  <div class="success">{{message}}</div>
+  <p>Token de acesso:</p>
+  <pre>{{accessToken}}</pre>
+{{/if}}
+
+<form action="/auth/login-form" method="post">
+  <label for="email">E-mail</label>
+  <input type="email" id="email" name="email" required />
+
+  <label for="password">Senha</label>
+  <input type="password" id="password" name="password" required />
+
+  <button type="submit">Entrar</button>
+</form>
+
+<p><a href="/auth/register">Criar conta</a></p>
+<p><a href="/">Voltar para a home</a></p>
