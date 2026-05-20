@@ -1,11 +1,14 @@
-import { Body, Controller, Get, Post, Render, Query } from '@nestjs/common';
+import { Body, Controller, Get, Post, Render, Query, Res } from '@nestjs/common';
+import type { Response } from 'express';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from '../users/dto/create-user.dto';
 import { LoginDto } from './dto/login.dto';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+  ) {}
 
   @Get('login')
   @Render('login')
@@ -47,18 +50,36 @@ export class AuthController {
 
   @Post('login-form')
   @Render('login')
-  async loginForm(@Body() loginDto: LoginDto) {
+  async loginForm(
+    @Body() loginDto: LoginDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
     try {
       const loginResult = await this.authService.login(loginDto);
+      res.cookie('auth_token', loginResult.accessToken, {
+        httpOnly: true,
+        maxAge: Number(
+          process.env.JWT_EXPIRES_IN_SECONDS || '3600',
+        ) * 1000,
+      });
       return {
         success: true,
         message: 'Login realizado com sucesso!',
-        accessToken: loginResult.accessToken,
       };
     } catch (error) {
       return {
         error: (error as Error).message || 'Erro ao efetuar login.',
       };
     }
+  }
+
+  @Get('logout')
+  @Render('login')
+  logout(@Res({ passthrough: true }) res: Response) {
+    res.clearCookie('auth_token');
+    return {
+      success: true,
+      message: 'Você saiu com sucesso. Faça login novamente para acessar o sistema.',
+    };
   }
 }

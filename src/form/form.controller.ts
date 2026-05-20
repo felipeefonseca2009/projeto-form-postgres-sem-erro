@@ -1,9 +1,25 @@
-import { Body, Controller, Get, Param, Post, Render, Redirect } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Render, Redirect, Req } from '@nestjs/common';
+import type { Request } from 'express';
+import { AuthService } from '../auth/auth.service';
 import { FormService } from './form.service';
 
 @Controller()
 export class FormController {
-  constructor(private readonly formService: FormService) {}
+  constructor(
+    private readonly formService: FormService,
+    private readonly authService: AuthService,
+  ) {}
+
+  private parseCookies(cookieHeader?: string): Record<string, string> {
+    if (!cookieHeader) {
+      return {};
+    }
+    return cookieHeader.split(';').reduce((cookies, cookiePair) => {
+      const [name, ...rest] = cookiePair.trim().split('=');
+      cookies[name] = rest.join('=');
+      return cookies;
+    }, {} as Record<string, string>);
+  }
 
   @Get('edit/person/:id')
   @Render('edit-person')
@@ -29,8 +45,14 @@ export class FormController {
 
   @Get()
   @Render('home')
-  home() {
-    return {};
+  async home(@Req() req: Request) {
+    const cookies = this.parseCookies(req.headers.cookie);
+    const token = cookies['auth_token'];
+    const payload = token ? await this.authService.validateToken(token) : null;
+
+    return {
+      loggedIn: Boolean(payload),
+    };
   }
 
   @Get('forms/person')

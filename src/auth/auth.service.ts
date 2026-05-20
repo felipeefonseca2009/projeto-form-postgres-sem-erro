@@ -6,6 +6,11 @@ import { CreateUserDto } from '../users/dto/create-user.dto';
 import { PublicUser, UsersService } from '../users/users.service';
 import { LoginDto } from './dto/login.dto';
 
+export type JwtPayload = {
+  sub: number;
+  email: string;
+};
+
 @Injectable()
 export class AuthService {
   constructor(
@@ -48,5 +53,13 @@ export class AuthService {
         email: user.email,
       },
     };
+  }
+
+  async validateToken(token: string): Promise<JwtPayload | null> {
+    try {
+      return await this.jwtService.verifyAsync<JwtPayload>(token);
+    } catch {
+      return null;
+    }
   }
 }

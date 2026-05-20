@@ -2,11 +2,23 @@
 
 <h1>Sistema de Formulários com PostgreSQL</h1>
 
-<ul>
-  <li><a href="/forms/person">Cadastro de Pessoa</a></li>
-  <li><a href="/forms/request">Nova Solicitação</a></li>
-  <li><a href="/records/person">Ver Cadastros de Pessoa</a></li>
-  <li><a href="/records/request">Ver Solicitações</a></li>
-  <li><a href="/auth/login">Login</a></li>
-  <li><a href="/auth/register">Registrar usuário</a></li>
-</ul>
+{{#if loggedIn}}
+  <section>
+    <h2>Seções disponíveis</h2>
+    <ul>
+      <li><a href="/forms/person">Cadastro de Pessoa</a></li>
+      <li><a href="/forms/request">Nova Solicitação</a></li>
+      <li><a href="/records/person">Ver Cadastros de Pessoa</a></li>
+      <li><a href="/records/request">Ver Solicitações</a></li>
+    </ul>
+    <p><a href="/auth/logout">Sair</a></p>
+  </section>
+{{else}}
+  <section>
+    <h2>Faça login para acessar o sistema</h2>
+    <ul>
+      <li><a href="/auth/login">Login</a></li>
+      <li><a href="/auth/register">Registrar usuário</a></li>
+    </ul>
+  </section>
+{{/if}}
