@@ -1,7 +1,8 @@
-import { Body, Controller, Get, Param, Post, Render, Redirect, Req } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Render, Redirect, Req, UseGuards } from '@nestjs/common';
 import type { Request } from 'express';
 import { AuthService } from '../auth/auth.service';
 import { FormService } from './form.service';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
 @Controller()
 export class FormController {
@@ -21,6 +22,7 @@ export class FormController {
     }, {} as Record<string, string>);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get('edit/person/:id')
   @Render('edit-person')
   async editPerson(@Param('id') id: number) {
@@ -28,6 +30,7 @@ export class FormController {
     return { person };
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post('edit/person/:id')
   @Redirect('/records/person')
   async updatePerson(
@@ -37,6 +40,7 @@ export class FormController {
     await this.formService.updatePerson(id, body);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post('delete/person/:id')
   @Redirect('/records/person')
   async deletePerson(@Param('id') id: string) {
@@ -55,12 +59,14 @@ export class FormController {
     };
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get('forms/person')
   @Render('person-form')
   personForm() {
     return {};
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post('forms/person')
   @Render('success')
   async submitPersonForm(
@@ -82,12 +88,14 @@ export class FormController {
     };
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get('forms/request')
   @Render('request-form')
   requestForm() {
     return {};
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post('forms/request')
   @Render('success')
   async submitRequestForm(
@@ -107,6 +115,7 @@ export class FormController {
     };
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get('records/person')
   @Render('person-records')
   async personRecords() {
@@ -114,6 +123,7 @@ export class FormController {
     return { records };
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get('records/request')
   @Render('request-records')
   async requestRecords() {
@@ -121,6 +131,7 @@ export class FormController {
     return { records };
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get('records/person/:id')
   @Render('person-record-detail')
   async personRecordDetail(@Param('id') id: string) {
@@ -128,6 +139,7 @@ export class FormController {
     return { record };
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get('records/request/:id')
   @Render('request-record-detail')
   async requestRecordDetail(@Param('id') id: string) {

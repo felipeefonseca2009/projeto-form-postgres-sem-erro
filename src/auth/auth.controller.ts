@@ -28,21 +28,22 @@ export class AuthController {
   }
 
   @Post('register-form')
-  @Render('register')
-  async registerForm(@Body() createUserDto: CreateUserDto) {
-    try {
-      await this.authService.register(createUserDto);
-      return {
-        success: true,
-        message: 'Cadastro realizado com sucesso! Faça login agora.',
-      };
-    } catch (error) {
-      return {
-        error: (error as Error).message || 'Erro ao cadastrar usuário.',
-      };
-    }
+// 1. Remova o @Render('register') daqui
+async registerForm(@Body() createUserDto: CreateUserDto, @Res() res: Response) { // 2. Injete o @Res() res: Response
+  try {
+    await this.authService.register(createUserDto);
+    
+    // 3. Em caso de sucesso, redireciona para a rota de login
+    return res.redirect('/auth/login');
+    
+  } catch (error) {
+    // 4. Em caso de erro, renderiza manualmente a página 'register' passando o objeto de erro
+    return res.render('register', {
+      error: (error as Error).message || 'Erro ao cadastrar usuário.',
+    });
   }
-
+}
+ 
   @Post('login')
   login(@Body() loginDto: LoginDto) {
     return this.authService.login(loginDto);
@@ -62,10 +63,8 @@ export class AuthController {
           process.env.JWT_EXPIRES_IN_SECONDS || '3600',
         ) * 1000,
       });
-      return {
-        success: true,
-        message: 'Login realizado com sucesso!',
-      };
+      // Redireciona para a página inicial após login bem-sucedido
+        return res.redirect('/');
     } catch (error) {
       return {
         error: (error as Error).message || 'Erro ao efetuar login.',
