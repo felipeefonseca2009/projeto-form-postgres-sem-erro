@@ -4,7 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { FormModule } from './form/form.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
-import { PersonRecord } from './form/entities/person.record.entity';
+import { Researcher } from './form/entities/person.record.entity';
 import { RequestRecord } from './form/entities/request.record.entity';
 import { User } from './users/user.entity';
 
@@ -24,7 +24,7 @@ import { User } from './users/user.entity';
         username: configService.get<string>('DB_USERNAME'),
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_NAME'),
-        entities: [PersonRecord, RequestRecord, User],
+        entities: [Researcher, RequestRecord, User],
         synchronize: true,
       }),
     }),

@@ -1,25 +1,39 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { User } from '../../users/user.entity';
 
-@Entity({ name: 'person_records' })
-export class PersonRecord {
+@Entity({ name: 'researchers' })
+export class Researcher {
   @PrimaryGeneratedColumn()
-  id: number;
+  id!: number;
 
   @Column()
-  nome: string;
+  nome!: string;
 
   @Column()
-  email: string;
+  email!: string;
 
   @Column({ nullable: true })
-  telefone: string;
+  telefone?: string;
 
   @Column({ nullable: true })
-  cidade: string;
+  cidade?: string;
 
   @Column({ nullable: true })
-  pais: string;
+  pais?: string;
 
-  @Column({nullable: true })
-  tataravo: string;
+  @Column({ nullable: true })
+  area_atuacao?: string;
+
+  @ManyToOne(() => User, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'user_id' })
+  user!: User;
+
+  @Column()
+  user_id!: number;
+
+  @CreateDateColumn()
+  createdAt!: Date;
+
+  @UpdateDateColumn()
+  updatedAt!: Date;
 }

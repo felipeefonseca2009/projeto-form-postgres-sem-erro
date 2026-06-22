@@ -3,6 +3,7 @@ import type { Request } from 'express';
 import { AuthService } from '../auth/auth.service';
 import { FormService } from './form.service';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 
 @Controller()
 export class FormController {
@@ -23,28 +24,28 @@ export class FormController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get('edit/person/:id')
-  @Render('edit-person')
-  async editPerson(@Param('id') id: number) {
-    const person = await this.formService.readPersonRecord(id);
-    return { person };
+  @Get('researchers/:id/edit')
+  @Render('edit-researcher')
+  async editResearcher(@Param('id') id: number) {
+    const researcher = await this.formService.readResearcher(id);
+    return { person: researcher };
   }
 
   @UseGuards(JwtAuthGuard)
-  @Post('edit/person/:id')
-  @Redirect('/records/person')
-  async updatePerson(
+  @Post('researchers/:id/edit')
+  @Redirect('/researchers')
+  async updateResearcher(
     @Param('id') id: number,
     @Body() body: any,
   ) {
-    await this.formService.updatePerson(id, body);
+    await this.formService.updateResearcher(id, body);
   }
 
   @UseGuards(JwtAuthGuard)
-  @Post('delete/person/:id')
-  @Redirect('/records/person')
-  async deletePerson(@Param('id') id: string) {
-    await this.formService.deletePerson(Number(id));
+  @Post('researchers/:id/delete')
+  @Redirect('/researchers')
+  async deleteResearcher(@Param('id') id: string) {
+    await this.formService.deleteResearcher(Number(id));
   }
 
   @Get()
@@ -60,14 +61,14 @@ export class FormController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get('forms/person')
-  @Render('person-form')
+  @Get('researchers/new')
+  @Render('researcher-form')
   personForm() {
     return {};
   }
 
   @UseGuards(JwtAuthGuard)
-  @Post('forms/person')
+  @Post('researchers')
   @Render('success')
   async submitPersonForm(
     @Body() body: {
@@ -76,15 +77,17 @@ export class FormController {
       telefone: string;
       cidade: string;
       pais: string;
-      tataravo: string;
+      area_atuacao: string;
     },
+    @CurrentUser() user: any,
   ) {
-    const person = await this.formService.savePersonForm(body);
+    const person = await this.formService.saveResearcherForm(body, user.id);
 
     return {
-      mensagem: 'Cadastro de pessoa salvo com sucesso.',
-      tipo: 'person',
+      mensagem: 'Cadastro de pesquisador salvo com sucesso.',
+      tipo: 'researchers',
       id: person.id,
+      isResearcher: true,
     };
   }
 
@@ -104,9 +107,12 @@ export class FormController {
       assunto: string;
       descricao: string;
       data: string;
+      researcher_id?: number;
     },
+    @CurrentUser() user: any,
   ) {
-    const request = await this.formService.saveRequestForm(body);
+    const { researcher_id, ...requestData } = body;
+    const request = await this.formService.saveRequestForm(requestData, researcher_id);
 
     return {
       mensagem: 'Solicitação salva com sucesso.',
@@ -116,10 +122,10 @@ export class FormController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get('records/person')
-  @Render('person-records')
+  @Get('researchers')
+  @Render('researcher-records')
   async personRecords() {
-    const records = await this.formService.listPersonRecords();
+    const records = await this.formService.listResearchers();
     return { records };
   }
 
@@ -132,10 +138,10 @@ export class FormController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get('records/person/:id')
-  @Render('person-record-detail')
+  @Get('researchers/:id')
+  @Render('researcher-record-detail')
   async personRecordDetail(@Param('id') id: string) {
-    const record = await this.formService.readPersonRecord(Number(id));
+    const record = await this.formService.readResearcher(Number(id));
     return { record };
   }
 

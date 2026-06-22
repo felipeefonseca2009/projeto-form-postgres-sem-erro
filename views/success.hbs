@@ -6,7 +6,9 @@
 <p>Tipo de registro: {{tipo}}</p>
 <p>ID gerado no banco: {{id}}</p>
 
-{{#if tipo}}
+{{#if isResearcher}}
+  <p><a href="/researchers/{{id}}">Ver este registro</a></p>
+{{else if tipo}}
   <p><a href="/records/{{tipo}}/{{id}}">Ver este registro</a></p>
 {{/if}}
 

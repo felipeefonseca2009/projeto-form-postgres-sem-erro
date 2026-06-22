@@ -6,9 +6,9 @@
 <body>
 
 <div class="container">
-  <h1>Editar Pessoa</h1>
+  <h1>Editar Pesquisador</h1>
 
-  <form action="/edit/person/{{person.id}}" method="post">
+  <form action="/researchers/{{person.id}}/edit" method="post">
 
     <label>Nome:</label>
     <input type="text" name="nome" value="{{person.nome}}">
@@ -25,7 +25,7 @@
     <button type="submit">Atualizar</button>
   </form>
 
-  <a href="/records/person">Voltar</a>
+  <a href="/researchers">Voltar</a>
 
 </div>
 

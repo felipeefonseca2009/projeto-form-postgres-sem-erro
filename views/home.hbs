@@ -1,15 +1,15 @@
 <link rel="stylesheet" href="/css/style.css">
 
-<h1>Sistema de Formulários com PostgreSQL</h1>
+<h1>Sistema de Formulários Para Cadastro de Pesquisadores</h1>
 
 {{#if loggedIn}}
   <section>
     <h2>Seções disponíveis</h2>
     <ul>
-      <li><a href="/forms/person">Cadastro de Pessoa</a></li>
-      <li><a href="/forms/request">Nova Solicitação</a></li>
-      <li><a href="/records/person">Ver Cadastros de Pessoa</a></li>
-      <li><a href="/records/request">Ver Solicitações</a></li>
+      <li><a href="/researchers/new">Cadastro de Pesquisador</a></li>
+      <li><a href="/forms/request">Nova Solicitação de Pesquisador</a></li>
+      <li><a href="/researchers">Ver Cadastros de Pesquisadores</a></li>
+      <li><a href="/records/request">Ver Solicitações de Pesquisadores</a></li>
     </ul>
     <p><a href="/auth/logout">Sair</a></p>
   </section>

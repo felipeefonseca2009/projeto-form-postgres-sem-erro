@@ -1,11 +1,11 @@
 <link rel="stylesheet" href="/css/style.css">
 
-<h2>Cadastros de Pessoa</h2>
+<h2>Cadastros de Pesquisadores</h2>
 
 <ul>
   {{#each records}}
     <li>
-      <a href="/records/person/{{this.id}}">
+      <a href="/researchers/{{this.id}}">
         {{this.id}} - {{this.nome}} - {{this.email}}
       </a>
     </li>

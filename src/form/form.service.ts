@@ -1,48 +1,53 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { PersonRecord } from './entities/person.record.entity';
+import { Researcher } from './entities/person.record.entity';
 import { RequestRecord } from './entities/request.record.entity';
 
 @Injectable()
 export class FormService {
-
   constructor(
-    @InjectRepository(PersonRecord)
-    private personRepository: Repository<PersonRecord>,
+    @InjectRepository(Researcher)
+    private researcherRepository: Repository<Researcher>,
 
     @InjectRepository(RequestRecord)
     private requestRepository: Repository<RequestRecord>,
   ) {}
 
-  async updatePerson(id: number, data: any) {
-  return await this.personRepository.update(id, data);
-}
-
-async deletePerson(id: number) {
-  return await this.personRepository.delete(id);
-}
-
-  async savePersonForm(data: { nome: string; email: string; telefone: string; cidade: string; pais: string; tataravo: string }) {
-    const person = this.personRepository.create(data);
-    return await this.personRepository.save(person);
+  async updateResearcher(id: number, data: any) {
+    return await this.researcherRepository.update(id, data);
   }
 
-  async saveRequestForm(data: { nome: string; assunto: string; descricao: string; data: string }) {
-    const request = this.requestRepository.create(data);
+  async deleteResearcher(id: number) {
+    return await this.researcherRepository.delete(id);
+  }
+
+  async saveResearcherForm(data: { nome: string; email: string; telefone: string; cidade: string; pais: string; area_atuacao: string }, userId: number) {
+    const researcher = this.researcherRepository.create({
+      ...data,
+      user_id: userId,
+    });
+    return await this.researcherRepository.save(researcher);
+  }
+
+  async saveRequestForm(data: { nome: string; assunto: string; descricao: string; data: string }, researcherId?: number) {
+    const request = this.requestRepository.create({
+      ...data,
+      ...(researcherId && { researcher_id: researcherId }),
+    });
     return await this.requestRepository.save(request);
   }
 
-  async listPersonRecords() {
-    return await this.personRepository.find();
+  async listResearchers() {
+    return await this.researcherRepository.find();
   }
-s
+
   async listRequestRecords() {
     return await this.requestRepository.find();
   }
 
-  async readPersonRecord(id: number) {
-    return await this.personRepository.findOneBy({ id });
+  async readResearcher(id: number) {
+    return await this.researcherRepository.findOneBy({ id });
   }
 
   async readRequestRecord(id: number) {

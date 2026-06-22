@@ -1,19 +1,33 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Researcher } from './person.record.entity';
 
 @Entity({ name: 'request_records' })
 export class RequestRecord {
   @PrimaryGeneratedColumn()
-  id: number;
+  id!: number;
 
   @Column()
-  nome: string;
+  nome!: string;
 
   @Column()
-  assunto: string;
+  assunto!: string;
 
   @Column({ type: 'text', nullable: true })
-  descricao: string;
+  descricao?: string;
 
   @Column({ nullable: true })
-  data: string;
+  data?: string;
+
+  @ManyToOne(() => Researcher, { onDelete: 'CASCADE', nullable: true })
+  @JoinColumn({ name: 'researcher_id' })
+  researcher?: Researcher;
+
+  @Column({ nullable: true })
+  researcher_id?: number;
+
+  @CreateDateColumn()
+  createdAt!: Date;
+
+  @UpdateDateColumn()
+  updatedAt!: Date;
 }
