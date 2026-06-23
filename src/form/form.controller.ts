@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Render, Redirect, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, NotFoundException, Param, Post, Render, Redirect, Req, UseGuards } from '@nestjs/common';
 import type { Request } from 'express';
 import { AuthService } from '../auth/auth.service';
 import { FormService } from './form.service';
@@ -26,8 +26,16 @@ export class FormController {
   @UseGuards(JwtAuthGuard)
   @Get('researchers/:id/edit')
   @Render('edit-researcher')
-  async editResearcher(@Param('id') id: number) {
-    const researcher = await this.formService.readResearcher(id);
+  async editResearcher(
+    @Param('id') id: string,
+    @CurrentUser() user: any,
+  ) {
+    const researcher = await this.formService.readResearcher(Number(id), user.id);
+
+    if (!researcher) {
+      throw new NotFoundException('Pesquisador nÃ£o encontrado.');
+    }
+
     return { person: researcher };
   }
 
@@ -35,17 +43,21 @@ export class FormController {
   @Post('researchers/:id/edit')
   @Redirect('/researchers')
   async updateResearcher(
-    @Param('id') id: number,
+    @Param('id') id: string,
     @Body() body: any,
+    @CurrentUser() user: any,
   ) {
-    await this.formService.updateResearcher(id, body);
+    await this.formService.updateResearcher(Number(id), user.id, body);
   }
 
   @UseGuards(JwtAuthGuard)
   @Post('researchers/:id/delete')
   @Redirect('/researchers')
-  async deleteResearcher(@Param('id') id: string) {
-    await this.formService.deleteResearcher(Number(id));
+  async deleteResearcher(
+    @Param('id') id: string,
+    @CurrentUser() user: any,
+  ) {
+    await this.formService.deleteResearcher(Number(id), user.id);
   }
 
   @Get()
@@ -107,12 +119,18 @@ export class FormController {
       assunto: string;
       descricao: string;
       data: string;
-      researcher_id?: number;
     },
     @CurrentUser() user: any,
   ) {
-    const { researcher_id, ...requestData } = body;
-    const request = await this.formService.saveRequestForm(requestData, researcher_id);
+    const researcher = await this.formService.getResearcherByUserId(user.id);
+    
+    if (!researcher) {
+      return {
+        erro: 'Você não tem um perfil de pesquisador. Crie um primeiro.',
+      };
+    }
+
+    const request = await this.formService.saveRequestForm(body, researcher.id);
 
     return {
       mensagem: 'Solicitação salva com sucesso.',
@@ -124,32 +142,38 @@ export class FormController {
   @UseGuards(JwtAuthGuard)
   @Get('researchers')
   @Render('researcher-records')
-  async personRecords() {
-    const records = await this.formService.listResearchers();
+  async personRecords(@CurrentUser() user: any) {
+    const records = await this.formService.listResearchers(user.id);
     return { records };
   }
 
   @UseGuards(JwtAuthGuard)
   @Get('records/request')
   @Render('request-records')
-  async requestRecords() {
-    const records = await this.formService.listRequestRecords();
+  async requestRecords(@CurrentUser() user: any) {
+    const records = await this.formService.listRequestRecords(user.id);
     return { records };
   }
 
   @UseGuards(JwtAuthGuard)
   @Get('researchers/:id')
   @Render('researcher-record-detail')
-  async personRecordDetail(@Param('id') id: string) {
-    const record = await this.formService.readResearcher(Number(id));
+  async personRecordDetail(
+    @Param('id') id: string,
+    @CurrentUser() user: any,
+  ) {
+    const record = await this.formService.readResearcher(Number(id), user.id);
     return { record };
   }
 
   @UseGuards(JwtAuthGuard)
   @Get('records/request/:id')
   @Render('request-record-detail')
-  async requestRecordDetail(@Param('id') id: string) {
-    const record = await this.formService.readRequestRecord(Number(id));
+  async requestRecordDetail(
+    @Param('id') id: string,
+    @CurrentUser() user: any,
+  ) {
+    const record = await this.formService.readRequestRecord(Number(id), user.id);
     return { record };
   }
 }

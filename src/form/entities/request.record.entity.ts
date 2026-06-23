@@ -18,12 +18,12 @@ export class RequestRecord {
   @Column({ nullable: true })
   data?: string;
 
-  @ManyToOne(() => Researcher, { onDelete: 'CASCADE', nullable: true })
+  @ManyToOne(() => Researcher, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'researcher_id' })
-  researcher?: Researcher;
+  researcher!: Researcher;
 
-  @Column({ nullable: true })
-  researcher_id?: number;
+  @Column()
+  researcher_id!: number;
 
   @CreateDateColumn()
   createdAt!: Date;

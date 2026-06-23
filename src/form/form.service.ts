@@ -14,12 +14,12 @@ export class FormService {
     private requestRepository: Repository<RequestRecord>,
   ) {}
 
-  async updateResearcher(id: number, data: any) {
-    return await this.researcherRepository.update(id, data);
+  async updateResearcher(id: number, userId: number, data: any) {
+    return await this.researcherRepository.update({ id, user_id: userId }, data);
   }
 
-  async deleteResearcher(id: number) {
-    return await this.researcherRepository.delete(id);
+  async deleteResearcher(id: number, userId: number) {
+    return await this.researcherRepository.delete({ id, user_id: userId });
   }
 
   async saveResearcherForm(data: { nome: string; email: string; telefone: string; cidade: string; pais: string; area_atuacao: string }, userId: number) {
@@ -30,27 +30,42 @@ export class FormService {
     return await this.researcherRepository.save(researcher);
   }
 
-  async saveRequestForm(data: { nome: string; assunto: string; descricao: string; data: string }, researcherId?: number) {
+  async saveRequestForm(data: { nome: string; assunto: string; descricao: string; data: string }, researcherId: number) {
     const request = this.requestRepository.create({
       ...data,
-      ...(researcherId && { researcher_id: researcherId }),
+      researcher_id: researcherId,
     });
     return await this.requestRepository.save(request);
   }
 
-  async listResearchers() {
-    return await this.researcherRepository.find();
+  async listResearchers(userId: number) {
+    return await this.researcherRepository.find({
+      where: { user_id: userId },
+    });
   }
 
-  async listRequestRecords() {
-    return await this.requestRepository.find();
+  async listRequestRecords(userId: number) {
+    return await this.requestRepository
+      .createQueryBuilder('request')
+      .innerJoin('request.researcher', 'researcher')
+      .where('researcher.user_id = :userId', { userId })
+      .getMany();
   }
 
-  async readResearcher(id: number) {
-    return await this.researcherRepository.findOneBy({ id });
+  async readResearcher(id: number, userId: number) {
+    return await this.researcherRepository.findOneBy({ id, user_id: userId });
   }
 
-  async readRequestRecord(id: number) {
-    return await this.requestRepository.findOneBy({ id });
+  async readRequestRecord(id: number, userId: number) {
+    return await this.requestRepository
+      .createQueryBuilder('request')
+      .innerJoin('request.researcher', 'researcher')
+      .where('request.id = :id', { id })
+      .andWhere('researcher.user_id = :userId', { userId })
+      .getOne();
+  }
+
+  async getResearcherByUserId(userId: number) {
+    return await this.researcherRepository.findOneBy({ user_id: userId });
   }
 }
