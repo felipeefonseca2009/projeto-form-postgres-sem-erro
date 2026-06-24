@@ -14,6 +14,10 @@
     Editar Solicitação
   </a>
 </p>
+
+<form action="/records/request/{{record.id}}/delete" method="post">
+  <button type="submit" class="btn-danger" onclick="return confirm('Deseja excluir essa solicitação?')">Excluir</button>
+</form>
 {{else}}
   <p>Registro não encontrado.</p>
 {{/if}}

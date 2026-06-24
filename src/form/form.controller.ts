@@ -95,6 +95,16 @@ export class FormController {
     await this.formService.deleteResearcher(Number(id), user.id);
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Post('records/request/:id/delete')
+  @Redirect('/records/request')
+  async deleteRequestRecord(
+  @Param('id') id: string,
+  @CurrentUser() user: any,
+  ) {
+  await this.formService.deleteRequestRecord(Number(id), user.id);
+  }
+
   @Get()
   @Render('home')
   async home(@Req() req: Request) {

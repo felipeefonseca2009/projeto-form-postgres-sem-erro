@@ -10,7 +10,7 @@
   <p><strong>Cidade:</strong> {{record.cidade}}</p>
   <p><strong>Pais:</strong> {{record.pais}}</p>
   <p><strong>Area de Atuação:</strong> {{record.area_atuacao}}</p>
-
+  
   <h3>Solicitações deste pesquisador :</h3>
 
   {{#if requests.length}}
@@ -32,8 +32,8 @@
   <p><a href="/researchers/{{record.id}}/requests/new">Nova solicitação para este pesquisador</a></p>
   <p><a href="/researchers/{{record.id}}/edit" class="btn-secondary">Editar Pesquisador</a></p>
 
-  <form action="/researchers/{{record.id}}/delete" method="post" style="margin-top:10px;">
-    <button type="submit" class="btn-danger">Excluir</button>
+  <form action="/researchers/{{record.id}}/delete" method="post">
+    <button type="submit" class="btn-danger" onclick="return confirm('Deseja excluir esse(a) pesquisador(a)?')"> Excluir</button>
   </form>
 {{else}}
   <p>Registro não encontrado.</p>
