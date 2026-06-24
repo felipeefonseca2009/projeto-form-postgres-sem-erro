@@ -47,8 +47,17 @@ export class FormService {
   async listRequestRecords(userId: number) {
     return await this.requestRepository
       .createQueryBuilder('request')
-      .innerJoin('request.researcher', 'researcher')
+      .innerJoinAndSelect('request.researcher', 'researcher')
       .where('researcher.user_id = :userId', { userId })
+      .getMany();
+  }
+
+  async listRequestRecordsByResearcher(researcherId: number, userId: number) {
+    return await this.requestRepository
+      .createQueryBuilder('request')
+      .innerJoin('request.researcher', 'researcher')
+      .where('request.researcher_id = :researcherId', { researcherId })
+      .andWhere('researcher.user_id = :userId', { userId })
       .getMany();
   }
 
@@ -59,7 +68,7 @@ export class FormService {
   async readRequestRecord(id: number, userId: number) {
     return await this.requestRepository
       .createQueryBuilder('request')
-      .innerJoin('request.researcher', 'researcher')
+      .innerJoinAndSelect('request.researcher', 'researcher')
       .where('request.id = :id', { id })
       .andWhere('researcher.user_id = :userId', { userId })
       .getOne();

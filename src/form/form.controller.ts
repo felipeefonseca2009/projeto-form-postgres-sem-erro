@@ -107,7 +107,26 @@ export class FormController {
   @Get('forms/request')
   @Render('request-form')
   requestForm() {
-    return {};
+    return { action: '/forms/request' };
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('researchers/:id/requests/new')
+  @Render('request-form')
+  async requestFormForResearcher(
+    @Param('id') id: string,
+    @CurrentUser() user: any,
+  ) {
+    const researcher = await this.formService.readResearcher(Number(id), user.id);
+
+    if (!researcher) {
+      throw new NotFoundException('Pesquisador nÃ£o encontrado.');
+    }
+
+    return {
+      action: `/researchers/${researcher.id}/requests`,
+      researcher,
+    };
   }
 
   @UseGuards(JwtAuthGuard)
@@ -140,6 +159,34 @@ export class FormController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Post('researchers/:id/requests')
+  @Render('success')
+  async submitRequestFormForResearcher(
+    @Param('id') id: string,
+    @Body() body: {
+      nome: string;
+      assunto: string;
+      descricao: string;
+      data: string;
+    },
+    @CurrentUser() user: any,
+  ) {
+    const researcher = await this.formService.readResearcher(Number(id), user.id);
+
+    if (!researcher) {
+      throw new NotFoundException('Pesquisador nÃ£o encontrado.');
+    }
+
+    const request = await this.formService.saveRequestForm(body, researcher.id);
+
+    return {
+      mensagem: 'SolicitaÃ§Ã£o salva com sucesso.',
+      tipo: 'request',
+      id: request.id,
+    };
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Get('researchers')
   @Render('researcher-records')
   async personRecords(@CurrentUser() user: any) {
@@ -162,8 +209,13 @@ export class FormController {
     @Param('id') id: string,
     @CurrentUser() user: any,
   ) {
-    const record = await this.formService.readResearcher(Number(id), user.id);
-    return { record };
+    const researcherId = Number(id);
+    const record = await this.formService.readResearcher(researcherId, user.id);
+    const requests = record
+      ? await this.formService.listRequestRecordsByResearcher(researcherId, user.id)
+      : [];
+
+    return { record, requests };
   }
 
   @UseGuards(JwtAuthGuard)

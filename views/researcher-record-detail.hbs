@@ -1,19 +1,42 @@
-<h2>Detalhe do Cadastro de Pesquisador</h2>
 <link rel="stylesheet" href="/css/style.css">
+
+<h2>Detalhe do Cadastro de Pesquisador</h2>
+
 {{#if record}}
   <p><strong>ID:</strong> {{record.id}}</p>
   <p><strong>Nome:</strong> {{record.nome}}</p>
   <p><strong>Email:</strong> {{record.email}}</p>
   <p><strong>Telefone:</strong> {{record.telefone}}</p>
   <p><strong>Cidade:</strong> {{record.cidade}}</p>
-  <p><strong>País:</strong> {{record.pais}}</p>
-  <p><strong>Área de Atuação:</strong> {{record.area_atuacao}}</p>
+  <p><strong>Pais:</strong> {{record.pais}}</p>
+  <p><strong>Area de Atuação:</strong> {{record.area_atuacao}}</p>
+
+  <h3>Solicitações deste pesquisador :</h3>
+
+  {{#if requests.length}}
+    <ul>
+      {{#each requests}}
+        <li>
+          <a href="/records/request/{{this.id}}">
+            {{this.id}} - {{this.assunto}} - {{this.data}}
+          </a>
+        </li>
+      {{/each}}
+    </ul>
+  {{else}}
+    <p>Nenhuma solicitação cadastrada para este pesquisador.</p>
+  {{/if}}
+
+  <hr>
+
+  <p><a href="/researchers/{{record.id}}/requests/new">Nova solicitação para este pesquisador</a></p>
+  <p><a href="/researchers/{{record.id}}/edit">Editar Pesquisador</a></p>
+
+  <form action="/researchers/{{record.id}}/delete" method="post" style="margin-top:10px;">
+    <button type="submit" class="btn-danger">Excluir</button>
+  </form>
 {{else}}
   <p>Registro não encontrado.</p>
 {{/if}}
 
 <p><a href="/researchers">Voltar</a></p>
-<p><a href="/researchers/{{record.id}}/edit">Editar Pesquisador</a></p>
-<form action="/researchers/{{record.id}}/delete" method="post" style="margin-top:10px;">
-  <button type="submit" class="btn-danger">Excluir</button>
-</form>

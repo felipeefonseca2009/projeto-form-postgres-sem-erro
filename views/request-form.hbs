@@ -2,9 +2,13 @@
 
 <h2>Nova Solicitação</h2>
 
-<form action="/forms/request" method="post">
+{{#if researcher}}
+  <p><strong>Pesquisador:</strong> {{researcher.nome}}</p>
+{{/if}}
+
+<form action="{{action}}" method="post">
   <label>Nome:</label>
-  <input type="text" name="nome" required>
+  <input type="text" name="nome" value="{{researcher.nome}}" required>
   <br><br>
 
   <label>Assunto:</label>
@@ -23,4 +27,8 @@
 </form>
 
 <br>
-<a href="/">Voltar</a>
+{{#if researcher}}
+  <a href="/researchers/{{researcher.id}}">Voltar</a>
+{{else}}
+  <a href="/">Voltar</a>
+{{/if}}

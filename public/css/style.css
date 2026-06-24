@@ -32,7 +32,7 @@ li {
 a {
   text-decoration: none;
   color: white;
-  background-color: #007bff;
+  background-color: rgb(9, 123, 245);
   padding: 10px 15px;
   border-radius: 8px;
   display: inline-block;
@@ -62,15 +62,19 @@ label {
 }
 
 button {
-  width: 100%;
+  width: 7%;
   padding: 10px;
   background-color: #007bff;
-  color: white;
+  color: rgb(255, 255, 255);
   border: none;
   border-radius: 8px;
   cursor: pointer;
+  display: block;  
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 15px;
 }
 
 button:hover {
-  background-color: #0056b3;
+  background-color: #406d9e;
 }
