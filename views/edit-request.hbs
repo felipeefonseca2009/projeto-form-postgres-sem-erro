@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="/css/style.css">
+
+<div class="container">
+  <h1>Editar Solicitacao</h1>
+
+  <form action="/records/request/{{request.id}}/edit" method="post">
+    <label>Assunto:</label>
+    <input type="text" name="assunto" value="{{request.assunto}}" required>
+
+    <label>Descrição:</label>
+    <input type="text" name="descricao" value="{{request.descricao}}" required>
+
+    <label>Data:</label>
+    <input type="date" name="data" value="{{request.data}}">
+
+    <button type="submit">Atualizar</button>
+  </form>
+
+  <br>
+  <a href="/records/request/{{request.id}}" class="btn-secondary">Voltar</a>
+</div>

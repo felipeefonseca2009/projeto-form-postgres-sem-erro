@@ -18,6 +18,22 @@ export class FormService {
     return await this.researcherRepository.update({ id, user_id: userId }, data);
   }
 
+  async updateRequestRecord( id: number, userId: number, data: { assunto: string; descricao: string; data: string;},) {
+  const request = await this.readRequestRecord(id, userId);
+
+  if (!request) {
+    return null;
+  }
+
+  await this.requestRepository.update(id, {
+    assunto: data.assunto,
+    descricao: data.descricao,
+    data: data.data,
+  });
+
+  return this.readRequestRecord(id, userId);
+}
+
   async deleteResearcher(id: number, userId: number) {
     return await this.researcherRepository.delete({ id, user_id: userId });
   }

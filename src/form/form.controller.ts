@@ -33,7 +33,7 @@ export class FormController {
     const researcher = await this.formService.readResearcher(Number(id), user.id);
 
     if (!researcher) {
-      throw new NotFoundException('Pesquisador nÃ£o encontrado.');
+      throw new NotFoundException('Pesquisador não encontrado.');
     }
 
     return { person: researcher };
@@ -49,6 +49,41 @@ export class FormController {
   ) {
     await this.formService.updateResearcher(Number(id), user.id, body);
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('records/request/:id/edit')
+  @Render('edit-request')
+  async editRequest(
+  @Param('id') id: string,
+  @CurrentUser() user: any,
+  ) {
+  const request = await this.formService.readRequestRecord(Number(id), user.id);
+
+  if (!request) {
+    throw new NotFoundException('Solicitacao nao encontrada.');
+  }
+
+  return { request };
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('records/request/:id/edit')
+  @Redirect('/records/request')
+  async updateRequest(
+  @Param('id') id: string,
+  @Body() body: {
+    assunto: string;
+    descricao: string;
+    data: string;
+  },
+  @CurrentUser() user: any,
+  ) {
+  await this.formService.updateRequestRecord(Number(id), user.id, {
+    assunto: body.assunto,
+    descricao: body.descricao,
+    data: body.data,
+  });
+}
 
   @UseGuards(JwtAuthGuard)
   @Post('researchers/:id/delete')
@@ -120,7 +155,7 @@ export class FormController {
     const researcher = await this.formService.readResearcher(Number(id), user.id);
 
     if (!researcher) {
-      throw new NotFoundException('Pesquisador nÃ£o encontrado.');
+      throw new NotFoundException('Pesquisador não encontrado.');
     }
 
     return {
@@ -175,7 +210,7 @@ export class FormController {
     const researcher = await this.formService.readResearcher(Number(id), user.id);
 
     if (!researcher) {
-      throw new NotFoundException('Pesquisador nÃ£o encontrado.');
+      throw new NotFoundException('Pesquisador não encontrado.');
     }
 
     const request = await this.formService.saveRequestForm(
@@ -184,7 +219,7 @@ export class FormController {
     );
 
     return {
-      mensagem: 'SolicitaÃ§Ã£o salva com sucesso.',
+      mensagem: 'Solicitação salva com sucesso.',
       tipo: 'request',
       id: request.id,
     };

@@ -5,6 +5,7 @@ body {
   padding: 24px;
   text-align: center;
   color: #333;
+  background-color: #43a0ec73;
 }
 
 h1 {
@@ -17,7 +18,7 @@ h2, h3 {
 }
 
 section {
-  background-color: #fff;
+  background-color: #f7f4f4;
   max-width: 520px;
   margin: 18px auto;
   padding: 20px;
@@ -61,13 +62,13 @@ a:hover {
 }
 
 a.btn-secondary {
-  background-color: #eef2f7;
-  color: #344054;
+  background-color: #b6a9fd;
+  color: #000000;
   border: 1px solid #cfd7e3;
 }
 
 a.btn-secondary:hover {
-  background-color: #dfe5ee;
+  background-color: #e9eef7;
 }
 
 a.btn-danger {
@@ -90,7 +91,7 @@ input, textarea {
   margin-top: 5px;
   margin-bottom: 15px;
   border-radius: 6px;
-  border: 1px solid #ccc;
+  border: 1px solid #ffffff;
   box-sizing: border-box;
 }
 
@@ -140,7 +141,7 @@ button.btn-danger:hover {
   max-width: 420px;
   margin: 12px auto;
   padding: 10px;
-  color: #0f5132;
+  color: #0e5c38;
   background-color: #d1e7dd;
   border: 1px solid #badbcc;
   border-radius: 8px;

@@ -8,6 +8,12 @@
   <p><strong>Assunto:</strong> {{record.assunto}}</p>
   <p><strong>Descrição:</strong> {{record.descricao}}</p>
   <p><strong>Data:</strong> {{record.data}}</p>
+
+  <p>
+  <a href="/records/request/{{record.id}}/edit" class="btn-secondary">
+    Editar Solicitação
+  </a>
+</p>
 {{else}}
   <p>Registro não encontrado.</p>
 {{/if}}
