@@ -30,7 +30,7 @@
   <br> <hr> <br>
 
   <p><a href="/researchers/{{record.id}}/requests/new">Nova solicitação para este pesquisador</a></p>
-  <p><a href="/researchers/{{record.id}}/edit">Editar Pesquisador</a></p>
+  <p><a href="/researchers/{{record.id}}/edit" class="btn-secondary">Editar Pesquisador</a></p>
 
   <form action="/researchers/{{record.id}}/delete" method="post" style="margin-top:10px;">
     <button type="submit" class="btn-danger">Excluir</button>
@@ -40,4 +40,4 @@
 {{/if}}
 
 <br> <hr> <br>
-<p><a href="/researchers">Voltar</a></p>
+<p><a href="/researchers" class="btn-secondary">Voltar</a></p>
