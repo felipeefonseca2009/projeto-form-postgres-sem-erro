@@ -134,7 +134,6 @@ export class FormController {
   @Render('success')
   async submitRequestForm(
     @Body() body: {
-      nome: string;
       assunto: string;
       descricao: string;
       data: string;
@@ -149,7 +148,10 @@ export class FormController {
       };
     }
 
-    const request = await this.formService.saveRequestForm(body, researcher.id);
+    const request = await this.formService.saveRequestForm(
+      { ...body, nome: researcher.nome },
+      researcher.id,
+    );
 
     return {
       mensagem: 'Solicitação salva com sucesso.',
@@ -164,7 +166,6 @@ export class FormController {
   async submitRequestFormForResearcher(
     @Param('id') id: string,
     @Body() body: {
-      nome: string;
       assunto: string;
       descricao: string;
       data: string;
@@ -177,7 +178,10 @@ export class FormController {
       throw new NotFoundException('Pesquisador nÃ£o encontrado.');
     }
 
-    const request = await this.formService.saveRequestForm(body, researcher.id);
+    const request = await this.formService.saveRequestForm(
+      { ...body, nome: researcher.nome },
+      researcher.id,
+    );
 
     return {
       mensagem: 'SolicitaÃ§Ã£o salva com sucesso.',
