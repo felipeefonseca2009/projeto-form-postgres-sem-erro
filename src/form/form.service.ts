@@ -51,7 +51,18 @@ export class FormService {
     return await this.researcherRepository.save(researcher);
   }
 
-  async saveRequestForm(data: { nome: string; assunto: string; descricao: string; data: string }, researcherId: number) {
+//edição abaixo pré-campos
+  async saveRequestForm(data: { nome: string; assunto: string; descricao: string; data: string; outros_especificar?: string; }, researcherId: number) {
+
+    const { outros_especificar, ...requestData } = data;
+  
+  let assuntoFinal = requestData.assunto;
+
+  // 2. Se o usuário selecionou 'Outros', substitui o valor pelo texto digitado
+  if (assuntoFinal === 'Outros' && outros_especificar) {
+    assuntoFinal = outros_especificar;
+  }
+
     const request = this.requestRepository.create({
       ...data,
       researcher_id: researcherId,

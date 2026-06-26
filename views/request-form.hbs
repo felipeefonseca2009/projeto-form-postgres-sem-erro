@@ -8,8 +8,19 @@
 
 <form action="{{action}}" method="post">
   <label>Assunto:</label>
-  <input type="text" name="assunto" required>
-  <br><br>
+  <select name="assunto" id="assunto" required onchange="verificarOutros()" style="width: 100%; padding: 10px 40px 10px 14px; font-size: 16px; color: #868585; background-color: #fff; border: 1px solid #ffffff; border-radius: 6px;">
+  <option value="" disabled selected>Selecione o motivo...</option>
+  <option value="Problemas técnicos">Problemas técnicos</option>
+  <option value="Erro de sistema">Erro de sistema</option>
+  <option value="Dúvidas de navegação">Dúvidas de navegação</option>
+  <option value="Outros">Outros (especificar)</option>
+</select>
+
+<div id="campo_outros" style="display: none; margin-top: 15px; margin-bottom: 15px;">
+  <label for="outros_especificar">Especifique o assunto:</label>
+  <input type="text" id="outros_especificar" name="outros_especificar" placeholder="Digite o assunto a ser tratado...">
+</div>
+<br><br>
 
   <label>Descrição:</label>
   <input type="text" name="descricao" required>
@@ -20,6 +31,24 @@
   <br><br>
 
   <button type="submit">Enviar</button>
+
+  <script>
+function verificarOutros() {
+  const select = document.getElementById('assunto');
+  const campoOutros = document.getElementById('campo_outros');
+  const inputEspecificar = document.getElementById('outros_especificar');
+
+  if (select.value === 'Outros') {
+    campoOutros.style.display = 'block';
+    inputEspecificar.required = true;
+  } else {
+    campoOutros.style.display = 'none';
+    inputEspecificar.required = false;
+    inputEspecificar.value = ''; // Limpa se o usuário mudar de ideia
+  }
+}
+</script>
+
 </form>
 
 <br>
