@@ -6,17 +6,17 @@ export class RequestRecord {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @Column()
+  @Column({ nullable: false })
   nome!: string;
 
-  @Column()
+  @Column({ nullable: false })
   assunto!: string;
 
-  @Column({ type: 'text', nullable: true })
-  descricao?: string;
+  @Column({ type: 'text', nullable: false })
+  descricao!: string;
 
-  @Column({ nullable: true })
-  data?: string;
+  @Column({ nullable: false })
+  data!: string;
 
   @ManyToOne(() => Researcher, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'researcher_id' })

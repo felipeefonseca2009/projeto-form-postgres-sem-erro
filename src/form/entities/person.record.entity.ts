@@ -6,23 +6,23 @@ export class Researcher {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @Column()
+  @Column({ nullable: false })
   nome!: string;
 
-  @Column()
+  @Column({ nullable: false })
   email!: string;
 
-  @Column({ nullable: true })
-  telefone?: string;
+  @Column({ nullable: false })
+  telefone!: string;
 
-  @Column({ nullable: true })
-  cidade?: string;
+  @Column({ nullable: false })
+  cidade!: string;
 
-  @Column({ nullable: true })
-  pais?: string;
+  @Column({ nullable: false })
+  pais!: string;
 
-  @Column({ nullable: true })
-  area_atuacao?: string;
+  @Column({ nullable: false })
+  area_atuacao!: string;
 
   @ManyToOne(() => User, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'user_id' })

@@ -38,8 +38,9 @@ export class FormService {
     return await this.researcherRepository.delete({ id, user_id: userId });
   }
 
+  //userId não lido, porém aplicação rodando normalmente
   async deleteRequestRecord(id: number, userId: number) {
-  return await this.requestRepository.delete(id);
+  return await this.requestRepository.delete(id,);
   }
 
   async saveResearcherForm(data: { nome: string; email: string; telefone: string; cidade: string; pais: string; area_atuacao: string }, userId: number) {
