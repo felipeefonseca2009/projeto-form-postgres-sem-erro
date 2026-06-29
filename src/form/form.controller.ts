@@ -124,6 +124,7 @@ export class FormController {
     return {};
   }
 
+  //Fim JSON researccher
   @UseGuards(JwtAuthGuard)
   @Post('researchers')
   async submitPersonForm(
@@ -140,7 +141,7 @@ export class FormController {
     @Res() res: any, // <--- Adicionado para controlar a renderização das telas HTML
   ) {
     try {
-      // Executa o método do seu Service (que já tem a validação de idade)
+      // Executa o método do Service (que já tem a validação de idade)
       const person = await this.formService.saveResearcherForm(body, user.id);
 
       // Se tudo der certo, renderiza a tela de sucesso
