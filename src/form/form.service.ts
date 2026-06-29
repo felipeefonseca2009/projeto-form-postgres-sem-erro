@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Researcher } from './entities/person.record.entity';
@@ -43,12 +43,33 @@ export class FormService {
   return await this.requestRepository.delete(id,);
   }
 
-  async saveResearcherForm(data: { nome: string; email: string; telefone: string; cidade: string; pais: string; area_atuacao: string }, userId: number) {
+  async saveResearcherForm(data: { nome: string; email: string; telefone: string; cidade: string; pais: string; area_atuacao: string; data_nascimento: string }, userId: number) {
+    if (!this.isAdult(data.data_nascimento)) {
+      throw new BadRequestException('O pesquisador deve ter mais de 18 anos.');
+    }
+
     const researcher = this.researcherRepository.create({
       ...data,
       user_id: userId,
     });
     return await this.researcherRepository.save(researcher);
+  }
+
+  public isAdult(birthDate: string): boolean {
+    const parsed = new Date(birthDate);
+    if (Number.isNaN(parsed.getTime())) {
+      throw new BadRequestException('Data de nascimento inválida.');
+    }
+
+    const today = new Date();
+    let age = today.getFullYear() - parsed.getFullYear();
+    const monthDiff = today.getMonth() - parsed.getMonth();
+
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < parsed.getDate())) {
+      age -= 1;
+    }
+
+    return age >= 18;
   }
 
 //edição abaixo pré-campos

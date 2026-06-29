@@ -12,6 +12,9 @@ export class Researcher {
   @Column({ nullable: false })
   email!: string;
 
+  @Column({ type: 'date', nullable: false })
+  data_nascimento!: string;
+
   @Column({ nullable: false })
   telefone!: string;
 

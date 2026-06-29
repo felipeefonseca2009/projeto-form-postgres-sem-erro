@@ -11,6 +11,9 @@ export class User {
   @Column({ unique: true })
   email!: string;
 
+  @Column({ type: 'date' })
+  data_nascimento!: string;
+
   @Column()
   passwordHash!: string;
 

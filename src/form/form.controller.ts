@@ -135,6 +135,7 @@ export class FormController {
       cidade: string;
       pais: string;
       area_atuacao: string;
+      data_nascimento: string;
     },
     @CurrentUser() user: any,
   ) {
