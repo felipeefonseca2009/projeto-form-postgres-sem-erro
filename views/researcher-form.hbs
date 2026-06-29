@@ -1,5 +1,12 @@
 <link rel="stylesheet" href="/css/style.css">
 
+{{#if error}}
+  <div class="error" style="color: red; margin-bottom: 15px;">
+    {{error}}
+  </div>
+{{/if}}
+
+
 <h2>Cadastro de Pesquisadores</h2>
 <form action="/researchers" method="post">
   <label>Nome:</label>

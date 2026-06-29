@@ -1,4 +1,4 @@
-import { Body, Controller, Get, NotFoundException, Param, Post, Render, Redirect, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, NotFoundException, Param, Post, Render, Redirect, Req, UseGuards, Res } from '@nestjs/common';
 import type { Request } from 'express';
 import { AuthService } from '../auth/auth.service';
 import { FormService } from './form.service';
@@ -60,7 +60,7 @@ export class FormController {
   const request = await this.formService.readRequestRecord(Number(id), user.id);
 
   if (!request) {
-    throw new NotFoundException('Solicitacao nao encontrada.');
+    throw new NotFoundException('Solicitação não encontrada.');
   }
 
   return { request };
@@ -126,7 +126,6 @@ export class FormController {
 
   @UseGuards(JwtAuthGuard)
   @Post('researchers')
-  @Render('success')
   async submitPersonForm(
     @Body() body: {
       nome: string;
@@ -138,15 +137,28 @@ export class FormController {
       data_nascimento: string;
     },
     @CurrentUser() user: any,
+    @Res() res: any, // <--- Adicionado para controlar a renderização das telas HTML
   ) {
-    const person = await this.formService.saveResearcherForm(body, user.id);
+    try {
+      // Executa o método do seu Service (que já tem a validação de idade)
+      const person = await this.formService.saveResearcherForm(body, user.id);
 
-    return {
-      mensagem: 'Cadastro de pesquisador salvo com sucesso.',
-      tipo: 'researchers',
-      id: person.id,
-      isResearcher: true,
-    };
+      // Se tudo der certo, renderiza a tela de sucesso
+      return res.render('success', {
+        mensagem: 'Cadastro de pesquisador salvo com sucesso.',
+        tipo: 'researchers',
+        id: person.id,
+        isResearcher: true,
+      });
+
+    } catch (error) {
+      // Se o Service jogar o erro de menor de idade (ou qualquer outro erro),
+      // ele cai aqui e re-renderiza o formulário mostrando a mensagem amigável
+      return res.render('researcher-form', {
+        error: (error as Error).message || 'Erro ao cadastrar pesquisador.',
+        oldData: body // Mantém os campos preenchidos para o usuário não perder o que digitou
+      });
+    }
   }
 
   @UseGuards(JwtAuthGuard)
