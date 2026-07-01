@@ -15,6 +15,13 @@ export class FormService {
   ) {}
 
   async updateResearcher(id: number, userId: number, data: any) {
+    // Se a atualização contém data de nascimento, validar idade
+    if (data && data.data_nascimento) {
+      if (!this.isAdult(data.data_nascimento)) {
+        throw new BadRequestException('O pesquisador deve ter mais de 18 anos.');
+      }
+    }
+
     return await this.researcherRepository.update({ id, user_id: userId }, data);
   }
 
@@ -56,6 +63,7 @@ export class FormService {
     return await this.researcherRepository.save(researcher);
   }
 
+  //BIRTHDAY
   public isAdult(birthDate: string): boolean {
     const parsed = new Date(birthDate);
     if (Number.isNaN(parsed.getTime())) {
@@ -92,6 +100,7 @@ export class FormService {
     return await this.requestRepository.save(request);
   }
 
+  //PESQUISADORES RETORNADOS FILTRADOS PELO user_id do usuario
   async listResearchers(userId: number) {
     return await this.researcherRepository.find({
       where: { user_id: userId },

@@ -7,31 +7,32 @@
 
 <div class="container">
   <h1>Editar Pesquisador</h1>
+  {{#if error}}
+    <div class="error" style="color: red; margin-bottom: 15px;">{{error}}</div>
+  {{/if}}
 
   <form action="/researchers/{{person.id}}/edit" method="post">
 
     <label>Nome:</label>
-    <input type="text" name="nome" value="{{person.nome}}">
+    <input type="text" name="nome" value="{{#if oldData.nome}}{{oldData.nome}}{{else}}{{person.nome}}{{/if}}">
 
     <label>Email:</label>
-    <input type="email" name="email" value="{{person.email}}">
+    <input type="email" name="email" value="{{#if oldData.email}}{{oldData.email}}{{else}}{{person.email}}{{/if}}">
 
     <label>Telefone:</label>
-    <input type="text" name="telefone" value="{{person.telefone}}">
+    <input type="text" name="telefone" value="{{#if oldData.telefone}}{{oldData.telefone}}{{else}}{{person.telefone}}{{/if}}">
 
     <label>Cidade:</label>
-    <input type="text" name="cidade" value="{{person.cidade}}">
+    <input type="text" name="cidade" value="{{#if oldData.cidade}}{{oldData.cidade}}{{else}}{{person.cidade}}{{/if}}">
 
     <label>País:</label>
-    <input type="text" name="pais" value="{{person.pais}}">
+    <input type="text" name="pais" value="{{#if oldData.pais}}{{oldData.pais}}{{else}}{{person.pais}}{{/if}}">
 
     <label>Área de Atuação:</label>
-    <input type="text" name="area_atuacao" value="{{person.area_atuacao}}">
+    <input type="text" name="area_atuacao" value="{{#if oldData.area_atuacao}}{{oldData.area_atuacao}}{{else}}{{person.area_atuacao}}{{/if}}">
 
     <label>Data de Nascimento:</label>
-    <input type="date" name="data_nascimento" value="{{person.data_nascimento}}">
-
-    
+    <input type="date" name="data_nascimento" value="{{#if oldData.data_nascimento}}{{oldData.data_nascimento}}{{else}}{{person.data_nascimento}}{{/if}}">
 
     <button type="submit">Atualizar</button>
   </form>

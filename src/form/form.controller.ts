@@ -1,5 +1,5 @@
 import { Body, Controller, Get, NotFoundException, Param, Post, Render, Redirect, Req, UseGuards, Res } from '@nestjs/common';
-import type { Request } from 'express';
+import type { Request, Response } from 'express';
 import { AuthService } from '../auth/auth.service';
 import { FormService } from './form.service';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
@@ -41,13 +41,25 @@ export class FormController {
 
   @UseGuards(JwtAuthGuard)
   @Post('researchers/:id/edit')
-  @Redirect('/researchers')
   async updateResearcher(
     @Param('id') id: string,
     @Body() body: any,
     @CurrentUser() user: any,
+    @Res() res: Response,
   ) {
-    await this.formService.updateResearcher(Number(id), user.id, body);
+    try {
+      await this.formService.updateResearcher(Number(id), user.id, body);
+      return res.redirect('/researchers');
+    } catch (error) {
+      // Em caso de erro (por exemplo validação de idade), re-renderiza o formulário
+      // mantendo os valores preenchidos pelo usuário em `oldData`.
+      const researcher = await this.formService.readResearcher(Number(id), user.id);
+      return res.render('edit-researcher', {
+        person: researcher,
+        error: (error as Error).message || 'Erro ao atualizar pesquisador.',
+        oldData: body,
+      });
+    }
   }
 
   @UseGuards(JwtAuthGuard)
@@ -65,6 +77,8 @@ export class FormController {
 
   return { request };
   }
+
+  
 
   @UseGuards(JwtAuthGuard)
   @Post('records/request/:id/edit')
