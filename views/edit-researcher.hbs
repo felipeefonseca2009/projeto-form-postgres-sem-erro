@@ -11,7 +11,20 @@
     <div class="error" style="color: red; margin-bottom: 15px;">{{error}}</div>
   {{/if}}
 
-  <form action="/researchers/{{person.id}}/edit" method="post">
+  <form action="/researchers/{{person.id}}/edit" method="post" enctype="multipart/form-data">
+
+    {{#if person.avatarUrl}}
+      <div style="margin-bottom: 15px;">
+        <img src="{{person.avatarUrl}}" alt="Avatar de {{person.nome}}" style="width:120px;height:120px;object-fit:cover;border-radius:50%;display:block;margin-bottom:10px;" />
+        <label>
+          <input type="checkbox" name="removeAvatar" value="on" /> Remover foto atual
+        </label>
+      </div>
+    {{/if}}
+
+    <label>Nova foto de perfil:</label>
+    <input type="file" name="avatar" accept="image/*">
+    <br><br>
 
     <label>Nome:</label>
     <input type="text" name="nome" value="{{#if oldData.nome}}{{oldData.nome}}{{else}}{{person.nome}}{{/if}}">

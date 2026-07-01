@@ -8,7 +8,11 @@
 
 
 <h2>Cadastro de Pesquisadores</h2>
-<form action="/researchers" method="post">
+<form action="/researchers" method="post" enctype="multipart/form-data">
+  <label>Foto de perfil (opcional):</label>
+  <input type="file" name="avatar" accept="image/*">
+  <br><br>
+
   <label>Nome:</label>
   <input type="text" name="nome" required value="{{oldData.nome}}">
   <br><br>
@@ -40,6 +44,5 @@
 
   <button type="submit">Salvar</button>
 </form>
-
-<br> <hr> <br>
+ <br>
 <a href="/" class="btn-secondary">Voltar</a>

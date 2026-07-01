@@ -1,5 +1,10 @@
-import { Body, Controller, Get, NotFoundException, Param, Post, Render, Redirect, Req, UseGuards, Res } from '@nestjs/common';
+import { Body, Controller, Get, NotFoundException, Param, Post, Render, Redirect, Req, UseGuards, Res, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import type { Request, Response } from 'express';
+import type { File } from 'multer';
+import { diskStorage } from 'multer';
+import { extname, join } from 'path';
+import { existsSync, mkdirSync } from 'fs';
 import { AuthService } from '../auth/auth.service';
 import { FormService } from './form.service';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
@@ -40,19 +45,51 @@ export class FormController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @UseInterceptors(
+    FileInterceptor('avatar', {
+      storage: diskStorage({
+        destination: (req, file, cb) => {
+          const uploadPath = join(__dirname, '..', '..', 'public', 'uploads', 'avatars');
+          if (!existsSync(uploadPath)) {
+            mkdirSync(uploadPath, { recursive: true });
+          }
+          cb(null, uploadPath);
+        },
+        filename: (_req, file, cb) => {
+          const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
+          cb(null, `${file.fieldname}-${uniqueSuffix}${extname(file.originalname)}`);
+        },
+      }),
+      fileFilter: (_req, file, cb) => {
+        const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/webp'];
+        cb(null, allowedMimeTypes.includes(file.mimetype));
+      },
+      limits: {
+        fileSize: 2 * 1024 * 1024,
+      },
+    }),
+  )
   @Post('researchers/:id/edit')
   async updateResearcher(
+    @UploadedFile() file: File,
     @Param('id') id: string,
     @Body() body: any,
     @CurrentUser() user: any,
     @Res() res: Response,
   ) {
     try {
-      await this.formService.updateResearcher(Number(id), user.id, body);
+      const updateData = { ...body };
+      if (body.removeAvatar === 'on') {
+        updateData.avatarUrl = null;
+      }
+      if (file) {
+        updateData.avatarUrl = `/uploads/avatars/${file.filename}`;
+      }
+      delete updateData.removeAvatar;
+
+      await this.formService.updateResearcher(Number(id), user.id, updateData);
       return res.redirect('/researchers');
     } catch (error) {
-      // Em caso de erro (por exemplo validação de idade), re-renderiza o formulário
-      // mantendo os valores preenchidos pelo usuário em `oldData`.
       const researcher = await this.formService.readResearcher(Number(id), user.id);
       return res.render('edit-researcher', {
         person: researcher,
@@ -140,8 +177,33 @@ export class FormController {
 
   //Fim JSON researccher
   @UseGuards(JwtAuthGuard)
+  @UseInterceptors(
+    FileInterceptor('avatar', {
+      storage: diskStorage({
+        destination: (req, file, cb) => {
+          const uploadPath = join(__dirname, '..', '..', 'public', 'uploads', 'avatars');
+          if (!existsSync(uploadPath)) {
+            mkdirSync(uploadPath, { recursive: true });
+          }
+          cb(null, uploadPath);
+        },
+        filename: (_req, file, cb) => {
+          const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
+          cb(null, `${file.fieldname}-${uniqueSuffix}${extname(file.originalname)}`);
+        },
+      }),
+      fileFilter: (_req, file, cb) => {
+        const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/webp'];
+        cb(null, allowedMimeTypes.includes(file.mimetype));
+      },
+      limits: {
+        fileSize: 2 * 1024 * 1024, // 2MB
+      },
+    }),
+  )
   @Post('researchers')
   async submitPersonForm(
+    @UploadedFile() file: File,
     @Body() body: {
       nome: string;
       email: string;
@@ -155,8 +217,11 @@ export class FormController {
     @Res() res: any, // <--- Adicionado para controlar a renderização das telas HTML
   ) {
     try {
-      // Executa o método do Service (que já tem a validação de idade)
-      const person = await this.formService.saveResearcherForm(body, user.id);
+      const avatarUrl = file ? `/uploads/avatars/${file.filename}` : undefined;
+      const person = await this.formService.saveResearcherForm(
+        { ...body, avatarUrl },
+        user.id,
+      );
 
       // Se tudo der certo, renderiza a tela de sucesso
       return res.render('success', {
@@ -167,11 +232,9 @@ export class FormController {
       });
 
     } catch (error) {
-      // Se o Service jogar o erro de menor de idade (ou qualquer outro erro),
-      // ele cai aqui e re-renderiza o formulário mostrando a mensagem amigável
       return res.render('researcher-form', {
         error: (error as Error).message || 'Erro ao cadastrar pesquisador.',
-        oldData: body // Mantém os campos preenchidos para o usuário não perder o que digitou
+        oldData: body,
       });
     }
   }

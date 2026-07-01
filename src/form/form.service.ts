@@ -51,7 +51,7 @@ export class FormService {
   }
 
   //AQUIIIIIIIII JSON RESEARCHER  
-  async saveResearcherForm(data: { nome: string; email: string; telefone: string; cidade: string; pais: string; area_atuacao: string; data_nascimento: string }, userId: number) {
+  async saveResearcherForm(data: { nome: string; email: string; telefone: string; cidade: string; pais: string; area_atuacao: string; data_nascimento: string; avatarUrl?: string }, userId: number) {
     if (!this.isAdult(data.data_nascimento)) {
       throw new BadRequestException('O pesquisador deve ter mais de 18 anos.');
     }

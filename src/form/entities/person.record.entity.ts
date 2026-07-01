@@ -27,6 +27,9 @@ export class Researcher {
   @Column({ nullable: false })
   area_atuacao!: string;
 
+  @Column({ nullable: true })
+  avatarUrl?: string;
+
   @ManyToOne(() => User, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'user_id' })
   user!: User;
